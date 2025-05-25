@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Money App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js for graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Top bar with profile/options icon -->
+        <div class="top-bar">
+            <button id="profileBtn" class="profile-btn" title="Options">
+                <span class="profile-icon">&#128100;</span>
+            </button>
+        </div>
+
+        <!-- Balances -->
+        <div class="balances-box">
+            <div id="balancesSection">
+                <h2>Balances</h2>
+                <ul id="balancesList"></ul>
+                <h3 id="totalBalance"></h3>
+            </div>
+        </div>
+
+        <!-- History -->
+        <div id="historySection">
+            <h2>History</h2>
+            <ul id="historyList"></ul>
+        </div>
+
+        <!-- Add/Spend Buttons -->
+        <div class="bottom-buttons">
+            <button id="addBtn">Add Money</button>
+            <button id="spendBtn">Spend Money</button>
+        </div>
+
+        <!-- Popup Modal for Add/Spend -->
+        <div id="popupModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeModal">&times;</span>
+                <h2 id="modalTitle"></h2>
+                <form id="popupForm" autocomplete="off">
+                    <input list="headsDatalist" id="popupHead" placeholder="Head (leave blank for Normal)" autocomplete="off">
+                    <datalist id="headsDatalist"></datalist>
+                    <input type="number" id="popupAmount" placeholder="Amount" required>
+                    <input type="text" id="popupNote" placeholder="Note (optional)">
+                    <button type="submit" id="popupSubmitBtn"></button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Popup Modal for Transfer/Delete/Details -->
+        <div id="headActionModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeHeadActionModal">&times;</span>
+                <h2 id="headActionTitle"></h2>
+                <div id="headActionOptions">
+                    <button id="transferBtn">Transfer Money</button>
+                    <button id="deleteHeadBtn">Delete Head</button>
+                    <button id="detailsHeadBtn">Show Details</button>
+                </div>
+                <form id="transferForm" style="display:none;">
+                    <select id="transferToHead"></select>
+                    <input type="number" id="transferAmount" placeholder="Amount" required>
+                    <button type="submit">Transfer</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal for Head Details -->
+        <div id="headDetailsModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeHeadDetailsModal">&times;</span>
+                <h2 id="headDetailsTitle"></h2>
+                <div id="headDetailsBalance"></div>
+                <ul id="headDetailsList"></ul>
+            </div>
+        </div>
+
+        <!-- Profile/Options Modal -->
+        <div id="profileModal" class="modal">
+            <div class="modal-content profile-modal-content">
+                <span class="close" id="closeProfileModal">&times;</span>
+                <h2>Options</h2>
+                <div class="profile-options">
+                    <button id="toggleDarkModeBtn">Toggle Dark/Light Mode</button>
+                    <button id="openAnalysisBtn">Analysis</button>
+                    <button id="exportHistoryBtn">Export History as PDF</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Modal -->
+        <div id="analysisModal" class="modal">
+            <div class="modal-content analysis-modal-content">
+                <span class="close" id="closeAnalysisModal">&times;</span>
+                <h2>Analysis</h2>
+                <div class="analysis-controls">
+                    <label>Type:
+                        <select id="analysisType">
+                            <option value="yearly">Yearly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="daily">Daily</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </label>
+                    <input type="month" id="analysisMonth" style="display:none;">
+                    <input type="number" id="analysisYear" min="2000" max="2100" style="display:none;" placeholder="Year">
+                    <input type="date" id="analysisDay" style="display:none;">
+                    <button id="showAnalysisBtn">Show</button>
+                </div>
+                <div id="analysisGraphs">
+                    <div class="graph-block">
+                        <canvas id="pieChartAdd" width="220" height="220"></canvas>
+                        <div class="graph-label">Money Added (by Head)</div>
+                    </div>
+                    <div class="graph-block">
+                        <canvas id="pieChartSpend" width="220" height="220"></canvas>
+                        <div class="graph-label">Money Spent (by Head)</div>
+                    </div>
+                    <div class="graph-block" style="width:100%;">
+                        <canvas id="barChart" width="400" height="220"></canvas>
+                        <div class="graph-label">Added vs Spent (by Head)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Modal -->
+        <div id="exportModal" class="modal">
+            <div class="modal-content export-modal-content">
+                <span class="close" id="closeExportModal">&times;</span>
+                <h2>Export History</h2>
+                <label>
+                    <input type="radio" name="exportType" value="all" checked> All Transactions
+                </label>
+                <label>
+                    <input type="radio" name="exportType" value="head"> Specific Head
+                </label>
+                <select id="exportHeadSelect" style="display:none;"></select>
+                <button id="exportPdfBtn">Export as PDF</button>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
